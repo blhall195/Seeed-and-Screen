@@ -33,7 +33,6 @@ float batt_percentage = 25;
 
 void setup()   {
 
-  Serial.begin(9600);
   oled.Initialise();
 
   delay(250); // wait for the OLED to power up
