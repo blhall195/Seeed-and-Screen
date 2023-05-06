@@ -21,8 +21,12 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include "OLED.h"
+#include "LSM6DS3.h"
 
 OLED oled; // create a OLED object
+
+//Create a instance of class LSM6DS3
+LSM6DS3 myIMU(I2C_MODE, 0x6A);    //I2C device address 0x6A
 
 float distance = 1.32;
 float compass = 234;
@@ -32,6 +36,16 @@ bool ble_status =  false;
 float batt_percentage = 25;
 
 void setup()   {
+  
+    // put your setup code here, to run once:
+  Serial.begin(9600);
+  while (!Serial);
+  //Call .begin() to configure the IMUs
+  if (myIMU.begin() != 0) {
+      Serial.println("Device error");
+  } else {
+      Serial.println("Device OK!");
+  }
 
   oled.Initialise();
 
@@ -52,8 +66,19 @@ void loop() {
   distance = random(1,30);
   compass = random(0,359);
   clino = random(-90,90);
+
+  delay(100);
+
+  //Accelerometer
+  float x = myIMU.readFloatAccelX();
+  float y = myIMU.readFloatAccelY();
+  float z = myIMU.readFloatAccelZ();
   batt_percentage = random(0,100);
   ble_status = !ble_status;
+
+  Serial.println(x);
+  Serial.println(y);
+  Serial.println(z);
 
   oled.Battery(batt_percentage);
   oled.Distance(distance);
@@ -61,7 +86,6 @@ void loop() {
   oled.Clino(clino);
   oled.Blutooth(ble_status);
 
-  delay(1000);
 
 }
 
