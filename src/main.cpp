@@ -77,8 +77,10 @@ void loop() {
   ble_status = !ble_status;
 
   Serial.println(x);
-  Serial.println(y);
-  Serial.println(z);
+  Serial.print(" ");
+  Serial.print(y);
+  Serial.print(" ");
+  Serial.print(z);
 
   oled.Battery(batt_percentage);
   oled.Distance(distance);
